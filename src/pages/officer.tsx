@@ -3,6 +3,7 @@ import RoomCard from "@/components/RoomCard";
 import { getRooms } from "@/utils/api"; // APIを呼び出す関数をインポート
 import { useRouter } from "next/router";
 import Header from "@/components/Header";
+import Router from "next/router";
 
 interface Room {
   room_id: number;
@@ -29,6 +30,13 @@ const officerPage: React.FC = () => {
     fetchRooms();
   }, []);
 
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role !== "役員" && role !== "管理者") {
+      Router.push("/login");
+    }
+  }, []);
+
   const handleReserve = (roomId: number) => {
     router.push(`/reservation?roomId=${roomId}`);
     console.log("Reserving room with ID:", roomId);
@@ -38,13 +46,11 @@ const officerPage: React.FC = () => {
     <div>
       <Header />
       <div className="flex justify-center items-center min-h-screen">
-        {rooms
-          .filter((room) => !room.executive)
-          .map((room) => (
-            <div className="w-1/4 p-2" key={room.room_id}>
-              <RoomCard room={room} onReserve={handleReserve} />
-            </div>
-          ))}
+        {rooms.map((room) => (
+          <div className="w-1/4 p-2" key={room.room_id}>
+            <RoomCard room={room} onReserve={handleReserve} />
+          </div>
+        ))}
       </div>
     </div>
   );
