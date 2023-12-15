@@ -7,7 +7,14 @@ import { GoogleAuthProvider } from "firebase/auth";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { getExecutiveRooms } from "../utils/api";
+import { getRooms } from "../utils/api";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 interface Room {
   room_id: number;
@@ -38,18 +45,36 @@ const ExecutivePage: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        getExecutiveRooms() // この行を変更しました
-          .then((data) => {
-            setRooms(data);
-          })
-          .catch((error) => {
-            console.error("Error fetching executive rooms:", error);
-          });
+        // Firestoreのデータベースインスタンス
+        const db = getFirestore();
+
+        // 現在のユーザーのメールアドレスでクエリを実行
+        const emailQuery = query(
+          collection(db, "allowedUsers"),
+          where("email", "==", currentUser.email)
+        );
+        const querySnapshot = await getDocs(emailQuery);
+
+        // クエリの結果が空でない場合（ユーザーが許可されている場合）
+        if (!querySnapshot.empty) {
+          getRooms()
+            .then((data) => {
+              setRooms(data);
+            })
+            .catch((error) => {
+              console.error("Error fetching executive rooms:", error);
+            });
+        } else {
+          // 許可されていないユーザーの場合
+          alert("アクセス権限がありません。");
+          signOut(auth);
+        }
       }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -104,11 +129,13 @@ const ExecutivePage: React.FC = () => {
             役員の方は下記の会議室を選択してください
           </p>
           <div className="flex justify-center items-center min-h-screen">
-            {rooms.map((room) => (
-              <div className="w-1/4 p-2" key={room.room_id}>
-                <RoomCard room={room} onReserve={handleReserve} />
-              </div>
-            ))}
+            {rooms
+              .filter((room) => room.executive)
+              .map((room) => (
+                <div className="w-1/4 p-2" key={room.room_id}>
+                  <RoomCard room={room} onReserve={handleReserve} />
+                </div>
+              ))}
           </div>
         </div>
         <div className="flex items-center justify-center">
