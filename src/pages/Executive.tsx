@@ -114,7 +114,7 @@ const ExecutivePage: React.FC = () => {
   }
 
   const handleReserve = (roomId: number) => {
-    router.push(`/reservation?roomId=${roomId}`);
+    router.push(`/reservOfficer?roomId=${roomId}`);
     console.log("Reserving room with ID:", roomId);
     // 予約処理を実装
   };

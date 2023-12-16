@@ -6,22 +6,6 @@ interface APIOptions {
   headers?: HeadersInit;
 }
 
-interface ValidationError {
-  message: string;
-  // 他の必要なフィールドがあればここに追加
-}
-
-// エラーレスポンスボディの型を定義
-interface ErrorResponse {
-  detail: ValidationError[];
-}
-
-interface ValidationErrorDetail {
-  loc: string[];
-  msg: string;
-  type: string;
-}
-
 interface DetailError {
   type: string;
   loc: string[];
@@ -80,15 +64,6 @@ export const createBooking = (data: any): Promise<any> =>
   fetchAPI("/bookings", { method: "POST", body: data });
 export const cancelBooking = (bookingId: string): Promise<any> =>
   fetchAPI(`/bookings/${bookingId}`, { method: "DELETE" });
-
-export const getExecutiveRooms = (): Promise<any[]> =>
-  fetchAPI("/rooms/executive");
-export const createExecutiveRoom = (data: any): Promise<any> =>
-  fetchAPI("/rooms/executive", { method: "POST", body: data });
-export const updateExecutiveRoom = (roomId: string, data: any): Promise<any> =>
-  fetchAPI(`/rooms/executive/${roomId}`, { method: "PUT", body: data });
-export const deleteExecutiveRoom = (roomId: string): Promise<any> =>
-  fetchAPI(`/rooms/executive/${roomId}`, { method: "DELETE" });
 
 export const getBookings = (): Promise<any[]> => fetchAPI("/bookings");
 export const getBookingById = (id: string): Promise<any> =>

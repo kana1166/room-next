@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getRoomCapacity, createBooking } from "@/utils/api";
 
-const ReservationPage: React.FC = () => {
+const ReservOfficerPage: React.FC = () => {
   const router = useRouter();
   const [roomId, setRoomId] = useState<number | null>(null);
   const [roomCapacity, setRoomCapacity] = useState<number | null>(null);
@@ -73,7 +73,7 @@ const ReservationPage: React.FC = () => {
       const result = await createBooking(bookingData);
       console.log("予約成功:", result);
       alert("予約完了");
-      router.push("/staffPage");
+      router.push("/officer");
     } catch (error) {
       console.error("予約エラー:", error);
       alert(
@@ -146,4 +146,4 @@ const ReservationPage: React.FC = () => {
   );
 };
 
-export default ReservationPage;
+export default ReservOfficerPage;
