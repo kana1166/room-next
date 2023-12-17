@@ -73,7 +73,7 @@ const ReservationPage: React.FC = () => {
       const result = await createBooking(bookingData);
       console.log("予約成功:", result);
       alert("予約完了");
-      router.push("/staffPage");
+      router.push("/bookingList");
     } catch (error) {
       console.error("予約エラー:", error);
       alert(
