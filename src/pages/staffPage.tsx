@@ -30,8 +30,6 @@ const StaffPage: React.FC = () => {
 
   const handleReserve = (roomId: number) => {
     router.push(`/reservation?roomId=${roomId}`);
-    console.log("Reserving room with ID:", roomId);
-    // 予約処理を実装
   };
   return (
     <div>

@@ -8,20 +8,15 @@ import { getBookings } from "../utils/api";
 const customStyles = {
   content: {
     top: "50%",
-    left: "50%",
+    left: "70%",
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    background: "#fff",
-    opacity: 1,
+    background: "black",
+    color: "#fff",
   },
 };
-
-interface ScheduleSlot {
-  hour: string;
-  isBooked: boolean;
-}
 
 interface Booking {
   user_id: string;
@@ -36,7 +31,7 @@ const ExBookingList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   useEffect(() => {
     getBookings()
@@ -50,90 +45,27 @@ const ExBookingList: React.FC = () => {
       });
   }, []);
 
-  const getUniqueBookingsPerDay = (bookings: Booking[]) => {
-    const uniqueBookings: Booking[] = [];
-    const seenBookings = new Map<string, Set<string>>();
-
-    bookings.forEach((booking) => {
-      const date = new Date(booking.start_datetime).toDateString();
-      if (!seenBookings.has(date)) {
-        seenBookings.set(date, new Set());
-      }
-      if (!seenBookings.get(date)!.has(booking.room_id)) {
-        seenBookings.get(date)!.add(booking.room_id);
-        uniqueBookings.push(booking);
-      }
-    });
-
-    return uniqueBookings;
-  };
-
-  const calendarEvents = getUniqueBookingsPerDay(bookings).map((booking) => ({
+  const calendarEvents = bookings.map((booking) => ({
     title: `Room ${booking.room_id}`,
     start: booking.start_datetime,
-    end: booking.end_datetime,
-    extendedProps: {
-      roomName: booking.roomName,
-      userId: booking.user_id,
-    },
+    extendedProps: booking,
   }));
 
   const handleEventClick = (clickInfo: any) => {
-    setSelectedDay(clickInfo.event.startStr);
+    setSelectedBooking(clickInfo.event.extendedProps);
     setModalIsOpen(false);
     setTimeout(() => {
       setModalIsOpen(true);
     }, 0);
-
     console.log("Event clicked: ", clickInfo.event.startStr);
-  };
-
-  useEffect(() => {
-    if (selectedDay) {
-      console.log("Selected day changed: ", selectedDay); // 選択された日付が変更されたときのログ
-    }
-  }, [selectedDay]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-  const generateDailySchedule = (selectedDay: string) => {
-    // 選択された日付に対する予約をフィルタリング
-    const filteredBookings = bookings.filter((booking) => {
-      const startDate = new Date(booking.start_datetime).toLocaleDateString();
-      const selectedDate = new Date(selectedDay).toLocaleDateString();
-      return startDate === selectedDate;
-    });
-
-    const hours = Array.from({ length: 24 }, (_, i) => i + 0);
-
-    // 各時間帯に対する予約状況を生成
-    return hours.map((hour) => {
-      const isBooked = filteredBookings.some((booking) => {
-        const startHour = new Date(booking.start_datetime).getHours();
-        return startHour === hour;
-      });
-      return {
-        hour: `${hour}:00`,
-        isBooked,
-      };
-    });
-  };
-
-  // スケジュールデータを元にスケジュール表をレンダリングする関数
-  const renderSchedule = (dailySchedule: ScheduleSlot[]) => {
-    return dailySchedule.map((slot, index) => (
-      <tr key={index}>
-        <td>{slot.hour}</td>
-        <td>{slot.isBooked ? "×" : "○"}</td>
-      </tr>
-    ));
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
-    console.log("Modal closed"); // デバッグメッセージを追加
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
@@ -148,18 +80,34 @@ const ExBookingList: React.FC = () => {
 
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal} // モーダル外クリックやESCキーで閉じる
+        onRequestClose={closeModal}
         style={customStyles}
       >
-        <h2>予約状況</h2>
-        <button onClick={closeModal}>閉じる</button>
-        {selectedDay && (
+        {selectedBooking && (
           <>
-            <table>
-              <tbody>
-                {renderSchedule(generateDailySchedule(selectedDay))}
-              </tbody>
-            </table>
+            <h2>予約詳細</h2>
+            <p>Room Name: {selectedBooking.room_id}</p>
+            <p>
+              Start Time:{" "}
+              {new Date(selectedBooking.start_datetime).toLocaleTimeString(
+                "ja-JP",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}
+            </p>
+            <p>
+              End Time:{" "}
+              {new Date(selectedBooking.end_datetime).toLocaleTimeString(
+                "ja-JP",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}
+            </p>
+            <button onClick={closeModal}>escクリック</button>
           </>
         )}
       </Modal>
@@ -167,7 +115,7 @@ const ExBookingList: React.FC = () => {
       <ul>
         {bookings.map((booking, index) => (
           <li key={index}>
-            User ID: {booking.user_id}, Room: {booking.roomName}, Start:{" "}
+            Room: {booking.room_id}, Start:{" "}
             {new Date(booking.start_datetime).toLocaleTimeString("ja-JP", {
               hour: "2-digit",
               minute: "2-digit",

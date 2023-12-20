@@ -18,8 +18,8 @@ export default function Login() {
           "Content-Type": "application/json", // ヘッダーをapplication/jsonに変更
         },
         body: JSON.stringify({
-          employee_number, // 直接オブジェクトを渡す
-          password, // 直接オブジェクトを渡す
+          employee_number,
+          password,
         }),
       });
 
@@ -32,21 +32,18 @@ export default function Login() {
       const data = await response.json();
       localStorage.setItem("token", data.access_token);
 
-      // トークンをデコードして役割を取得
       const payload = data.access_token.split(".")[1];
       const decodedPayload = JSON.parse(atob(payload));
       console.log("Decoded JWT Payload:", decodedPayload);
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("role", decodedPayload.role);
 
-      // 役割に応じたリダイレクト
       if (decodedPayload.role === "役員" || decodedPayload.role === "管理者") {
         Router.push("/officer");
       } else {
         Router.push("/staffPage");
       }
     } catch (err) {
-      // エラー処理
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -56,28 +53,50 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="employeeNumber">社員番号:</label>
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      >
+        <div className="mb-4">
+          <label
+            htmlFor="employeeNumber"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            社員番号:
+          </label>
           <input
             type="text"
             id="employeeNumber"
             value={employee_number}
             onChange={(e) => setEmployeeNumber(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div>
-          <label htmlFor="password">パスワード:</label>
+        <div className="mb-6">
+          <label
+            htmlFor="password"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            パスワード:
+          </label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {error && <p>{error}</p>}
-        <button type="submit">ログイン</button>
+        {error && <p className="text-red-500 text-xs italic">{error}</p>}
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            ログイン
+          </button>
+        </div>
       </form>
     </div>
   );

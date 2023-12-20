@@ -13,7 +13,7 @@ interface Room {
   photo_url: string;
 }
 
-const officerPage: React.FC = () => {
+const OfficerPage: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const router = useRouter();
 
@@ -39,8 +39,6 @@ const officerPage: React.FC = () => {
 
   const handleReserve = (roomId: number) => {
     router.push(`/reservOfficer?roomId=${roomId}`);
-    console.log("Reserving room with ID:", roomId);
-    // 予約処理を実装
   };
   return (
     <div>
@@ -56,4 +54,4 @@ const officerPage: React.FC = () => {
   );
 };
 
-export default officerPage;
+export default OfficerPage;
