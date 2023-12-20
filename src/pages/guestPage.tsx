@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchAPI } from "../utils/api";
+import { useRouter } from "next/router";
 
 interface GuestUser {
   guest_user_id: string;
@@ -10,6 +11,7 @@ interface GuestUser {
 const GuestPage: React.FC = () => {
   const [guestUsers, setGuestUsers] = useState<GuestUser[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchGuestUsers = async () => {
@@ -36,6 +38,10 @@ const GuestPage: React.FC = () => {
 
   if (error) return <p>Error: {error}</p>;
 
+  const handleGoHome = () => {
+    router.push("/");
+  };
+
   return (
     <>
       <h1 className="text-2xl font-semibold text-center">ゲストユーザー一覧</h1>
@@ -49,6 +55,14 @@ const GuestPage: React.FC = () => {
             <p>予約ID: {user.booking_id}</p>
           </div>
         ))}
+      </div>
+      <div className="text-center mt-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleGoHome}
+        >
+          Homeに戻る
+        </button>
       </div>
     </>
   );

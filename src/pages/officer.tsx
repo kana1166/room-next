@@ -40,6 +40,11 @@ const OfficerPage: React.FC = () => {
   const handleReserve = (roomId: number) => {
     router.push(`/reservOfficer?roomId=${roomId}`);
   };
+
+  const handleGoHome = () => {
+    router.push("/");
+  };
+
   return (
     <div>
       <Header />
@@ -49,6 +54,14 @@ const OfficerPage: React.FC = () => {
             <RoomCard room={room} onReserve={handleReserve} />
           </div>
         ))}
+      </div>
+      <div className="text-center mt-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleGoHome}
+        >
+          Homeに戻る
+        </button>
       </div>
     </div>
   );
