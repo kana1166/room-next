@@ -72,6 +72,7 @@ export const updateBooking = (bookingId: string, data: any): Promise<any> =>
   fetchAPI(`/bookings/${bookingId}`, { method: "PUT", body: data });
 export const deleteBooking = (bookingId: string): Promise<any> =>
   fetchAPI(`/bookings/${bookingId}`, { method: "DELETE" });
+export const getguests = (): Promise<any[]> => fetchAPI("/guest_users");
 
 export const getRoomCapacity = async (roomId: number): Promise<number> => {
   try {
