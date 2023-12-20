@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RoomCard from "@/components/RoomCard";
-import { getRooms } from "@/utils/api"; // APIを呼び出す関数をインポート
+import { getRooms } from "@/utils/api";
 import { useRouter } from "next/router";
 import Header from "@/components/Header";
 import Router from "next/router";
