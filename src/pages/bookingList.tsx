@@ -54,7 +54,6 @@ const BookingList: React.FC = () => {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          // 'err' が Error インスタンスでない場合の処理
           setError("An unknown error occurred");
         }
         setLoading(false);

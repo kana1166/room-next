@@ -48,17 +48,14 @@ const ExecutivePage: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Firestoreのデータベースインスタンス
         const db = getFirestore();
 
-        // 現在のユーザーのメールアドレスでクエリを実行
         const emailQuery = query(
           collection(db, "allowedUsers"),
           where("email", "==", currentUser.email)
         );
         const querySnapshot = await getDocs(emailQuery);
 
-        // クエリの結果が空でない場合（ユーザーが許可されている場合）
         if (!querySnapshot.empty) {
           getRooms()
             .then((data) => {
@@ -116,7 +113,6 @@ const ExecutivePage: React.FC = () => {
   const handleReserve = (roomId: number) => {
     router.push(`/reservOfficer?roomId=${roomId}`);
     console.log("Reserving room with ID:", roomId);
-    // 予約処理を実装
   };
 
   return (

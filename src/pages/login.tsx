@@ -18,8 +18,8 @@ export default function Login() {
           "Content-Type": "application/json", // ヘッダーをapplication/jsonに変更
         },
         body: JSON.stringify({
-          employee_number, // 直接オブジェクトを渡す
-          password, // 直接オブジェクトを渡す
+          employee_number,
+          password,
         }),
       });
 
@@ -32,21 +32,18 @@ export default function Login() {
       const data = await response.json();
       localStorage.setItem("token", data.access_token);
 
-      // トークンをデコードして役割を取得
       const payload = data.access_token.split(".")[1];
       const decodedPayload = JSON.parse(atob(payload));
       console.log("Decoded JWT Payload:", decodedPayload);
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("role", decodedPayload.role);
 
-      // 役割に応じたリダイレクト
       if (decodedPayload.role === "役員" || decodedPayload.role === "管理者") {
         Router.push("/officer");
       } else {
         Router.push("/staffPage");
       }
     } catch (err) {
-      // エラー処理
       if (err instanceof Error) {
         setError(err.message);
       } else {

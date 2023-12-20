@@ -12,21 +12,17 @@ const GuestPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // fetchGuestUsers関数は非同期関数として定義されています
     const fetchGuestUsers = async () => {
       try {
         const response = await fetchAPI("/guest_users/");
         let data;
         if (response.json) {
-          // response が json メソッドを持っている場合のみ実行
           data = await response.json();
         } else {
-          // response が既にJSON形式のデータを持っている場合
           data = response;
         }
         setGuestUsers(data);
       } catch (err) {
-        // エラーハンドリング
         if (err instanceof Error) {
           setError(err.message);
         } else {
@@ -35,14 +31,11 @@ const GuestPage: React.FC = () => {
       }
     };
 
-    // useEffect内でfetchGuestUsers関数を呼び出します
     fetchGuestUsers();
-  }, []); // 空の依存配列を指定して、コンポーネントのマウント時にのみ実行されるようにします
+  }, []);
 
-  // エラーがある場合、エラーメッセージを表示します
   if (error) return <p>Error: {error}</p>;
 
-  // データが取得できた場合、ゲストユーザーのリストを表示します
   return (
     <>
       <h1 className="text-2xl font-semibold text-center">ゲストユーザー一覧</h1>

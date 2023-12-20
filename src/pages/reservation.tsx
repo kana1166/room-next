@@ -12,7 +12,6 @@ const ReservationPage: React.FC = () => {
     mainUserEmployeeNumber: "",
     memberEmployeeNumbers: "",
     guestNames: "",
-    // その他の必要な情報をここに追加
   });
 
   useEffect(() => {
@@ -43,7 +42,6 @@ const ReservationPage: React.FC = () => {
     event.preventDefault();
 
     try {
-      // 社員番号から user_id を取得するロジック（適切なAPIエンドポイントを使用）
       const userIdResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/employee_number/${reservationDetails.mainUserEmployeeNumber}`
       );
@@ -54,7 +52,7 @@ const ReservationPage: React.FC = () => {
 
       // 予約データの構築（user_id を含める）
       const bookingData = {
-        user_id: userIdData.user_id, // 取得した user_id を使用
+        user_id: userIdData.user_id,
         room_id: roomId,
         start_datetime: reservationDetails.startDateTime,
         end_datetime: reservationDetails.endDateTime,

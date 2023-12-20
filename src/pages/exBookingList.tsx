@@ -52,7 +52,6 @@ const ExBookingList: React.FC = () => {
   }));
 
   const handleEventClick = (clickInfo: any) => {
-    // イベントをクリックしたときに選択された予約の詳細をセットする
     setSelectedBooking(clickInfo.event.extendedProps);
     setModalIsOpen(false);
     setTimeout(() => {
@@ -63,7 +62,6 @@ const ExBookingList: React.FC = () => {
 
   const closeModal = () => {
     setModalIsOpen(false);
-    console.log("Modal closed"); // デバッグメッセージを追加
   };
 
   if (loading) return <p>Loading...</p>;

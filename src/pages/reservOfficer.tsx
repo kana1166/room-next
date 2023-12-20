@@ -12,7 +12,6 @@ const ReservOfficerPage: React.FC = () => {
     mainUserEmployeeNumber: "",
     memberEmployeeNumbers: "",
     guestNames: "",
-    // その他の必要な情報をここに追加
   });
 
   useEffect(() => {
@@ -54,7 +53,7 @@ const ReservOfficerPage: React.FC = () => {
 
       // 予約データの構築（user_id を含める）
       const bookingData = {
-        user_id: userIdData.user_id, // 取得した user_id を使用
+        user_id: userIdData.user_id,
         room_id: roomId,
         start_datetime: reservationDetails.startDateTime,
         end_datetime: reservationDetails.endDateTime,
@@ -190,7 +189,6 @@ const ReservOfficerPage: React.FC = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {/* その他の入力フィールド */}
         <button
           type="submit"
           className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"

@@ -6,7 +6,6 @@ import { getRooms } from "../utils/api";
 interface Room {
   id: string;
   name: string;
-  // ...他のプロパティ
 }
 
 const RoomsPage: React.FC = () => {
