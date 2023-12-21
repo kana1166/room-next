@@ -36,10 +36,14 @@ const firebaseConfig = {
 console.log("Firebase Config:", firebaseConfig);
 if (!getApps().length) {
   initializeApp(firebaseConfig);
+  console.log("Firebase has been initialized");
+} else {
+  console.log("Firebase was already initialized");
 }
 
+const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const db = getFirestore();
+const db = getFirestore(app);
 
 const ExecutivePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
