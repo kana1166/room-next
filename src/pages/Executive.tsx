@@ -33,46 +33,41 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
-
+console.log("Firebase Config:", firebaseConfig);
 if (!getApps().length) {
   initializeApp(firebaseConfig);
 }
 
 const auth = getAuth();
+const db = getFirestore();
 
 const ExecutivePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    return onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        const db = getFirestore();
-
         const emailQuery = query(
           collection(db, "allowedUsers"),
           where("email", "==", currentUser.email)
         );
         const querySnapshot = await getDocs(emailQuery);
-
         if (!querySnapshot.empty) {
-          getRooms()
-            .then((data) => {
-              setRooms(data);
-            })
-            .catch((error) => {
-              console.error("Error fetching executive rooms:", error);
-            });
+          try {
+            const roomsData = await getRooms();
+            setRooms(roomsData);
+          } catch (error) {
+            console.error("Error fetching rooms:", error);
+          }
         } else {
-          // 許可されていないユーザーの場合
           alert("アクセス権限がありません。");
           signOut(auth);
+          router.push("/");
         }
       }
     });
-
-    return () => unsubscribe();
   }, []);
 
   const handleGoogleLogin = async () => {
