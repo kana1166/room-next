@@ -12,7 +12,7 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await fetch("http://54.87.195.13:8000/token", {
+      const response = await fetch("https://54.87.195.13:8000/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // ヘッダーをapplication/jsonに変更
