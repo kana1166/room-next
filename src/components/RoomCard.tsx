@@ -26,11 +26,11 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, onReserve }) => {
           className="my-2 block mx-auto"
         />
       )}
-      <p className="text-center">収容人数: {room.capacity}名</p>
+      <p className="text-center">最大人数: {room.capacity}名</p>
       <div className="text-center">
         <button
           onClick={() => onReserve(room.room_id)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded border border-blue-700"
+          className="bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded border border-blue-700"
         >
           予約する
         </button>

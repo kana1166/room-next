@@ -8,10 +8,10 @@ const Header = () => {
           <Link href="/">Home</Link>
         </li>
         <li>
-          <Link href="/Executive">役員専用ページ</Link>
+          <Link href="/Executive">重役専用ページ</Link>
         </li>
         <li>
-          <Link href="http://localhost:8501">会議室管理</Link>
+          <Link href="http://54.87.195.13:8501/">会議室管理</Link>
         </li>
       </ul>
     </header>
