@@ -33,10 +33,8 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
-console.log("Firebase Config:", firebaseConfig);
 if (!getApps().length) {
   initializeApp(firebaseConfig);
-  console.log("Firebase has been initialized");
 } else {
   console.log("Firebase was already initialized");
 }
@@ -119,16 +117,24 @@ const ExecutivePage: React.FC = () => {
       <Header />
       <div>
         <div className="container mx-auto px-4">
-          <h1 className="text-center m-4">役員専用ページ</h1>
+          <h1 className="text-center m-4">重役専用ページ</h1>
           <p className="text-center">
-            役員の方は下記の会議室を選択してください
+            本日の資料はこちらからダウンロードできます。
           </p>
-          <div className="flex justify-center items-center min-h-screen">
+          <div className="text-center">
+            <button className="bg-gray-500 hover:bg-blue-700 text-white font-bold m-4 py-2 px-4 rounded">
+              資料ダウンロード
+            </button>
+          </div>
+          <div className="flex justify-center items-center min-h-screen flex-wrap">
             {rooms
               .filter((room) => room.executive)
               .map((room) => (
-                <div className="w-1/4 p-2" key={room.room_id}>
-                  <RoomCard room={room} onReserve={handleReserve} />
+                <div className="w-1/3 p-0.5" key={room.room_id}>
+                  {" "}
+                  {/* パディングの調整 */}
+                  <RoomCard room={room} onReserve={handleReserve} />{" "}
+                  {/* マージンボトムの追加 */}
                 </div>
               ))}
           </div>
